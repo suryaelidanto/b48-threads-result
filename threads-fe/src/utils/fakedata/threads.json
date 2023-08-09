@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "user": {
+            "id": 1,
+            "full_name": "Bintang Nauval",
+            "username": "bintang21",
+            "email": "bintang@gmail.com",
+            "picture": "https://static.wikia.nocookie.net/naruto/images/2/21/Sasuke_Part_1.png"
+        },
+        "posted_at": "3h",
+        "content": "aduh pusing banget belajar ngoding, tapi gampang deng",
+        "image": "image.jpg",
+        "likes_count": 20,
+        "replies_count": 21,
+        "is_liked": true
+    },
+    {
+        "id": 2,
+        "user": {
+            "id": 1,
+            "full_name": "Helen Cindera",
+            "username": "helen23",
+            "email": "helen@gmail.com",
+            "picture": "https://static.wikia.nocookie.net/naruto/images/2/21/Sasuke_Part_1.png"
+        },
+        "posted_at": "1h",
+        "content": "aduh gampang banget, ezpz",
+        "image": "helen.jpg",
+        "likes_count": 99,
+        "replies_count": 30,
+        "is_liked": false
+    }
+]
