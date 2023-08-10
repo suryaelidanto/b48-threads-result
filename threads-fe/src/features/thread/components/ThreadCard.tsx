@@ -1,52 +1,47 @@
+import { IThreadCard } from "@/interfaces/thread";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
+import { useState } from "react";
 
-interface User {
-  id?: number,
-  full_name?: string,
-  username?: string,
-  email?: string,
-  picture?: string,
-}
+export function ThreadCard(props: IThreadCard) {
+  const [showImage, setShowImage] = useState<boolean>(true);
 
-export interface ThreadCard {
-  id?: number,
-  user: User,
-  posted_at?: string;
-  content?: string;
-  image?: string;
-  likes_count?: number;
-  replies_count?: number;
-  is_liked: boolean;
-}
-
-// not hoisted
-export function ThreadCard(props: ThreadCard) {
   return (
     <>
       <Box
         display={"flex"}
-        width="500px"
-        borderBottom={"2px solid white"}
+        width="100%"
+        borderBottom={"1px solid white"}
         padding={"20px 0px"}
       >
         <Image
-          src={props.user?.picture}
+          src={
+            props.user?.picture ? props.user?.picture : "/user-placeholder.png"
+          }
           width={"50px"}
           height={"50px"}
           objectFit={"cover"}
           borderRadius={"50%"}
           marginRight={"20px"}
+          alt="user_profile_image"
         />
-        <Box>
+
+        <Box display={"flex"} flexDirection={"column"} gap={2}>
           <Box display={"flex"}>
             <Text>{props.user?.full_name}</Text>
-            <Text color="grey">@{props.user?.username}</Text>
-            <Text color="grey">{props.posted_at}</Text>
+            <Text color="brand.grey">@{props.user?.username}</Text>
+            <Text color="brand.grey">{props.posted_at}</Text>
           </Box>
           <Text>{props.content}</Text>
-          <Text>{props.image}</Text>
+          {showImage && (
+            <Image
+              src={props.image}
+              onError={() => setShowImage(false)}
+              alt="content_image"
+            />
+          )}
+
           <Box display={"flex"} gap={2} marginTop={"10px"}>
-            <Button backgroundColor={props.is_liked ? "red" : "grey"}>
+            <Button backgroundColor={props.is_liked ? "red" : "brand.grey"}>
               {props.likes_count}
             </Button>
             <Button>{props.replies_count} Replies</Button>
