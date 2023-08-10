@@ -13,7 +13,7 @@ export default function App() {
             </Main>
           }
           path="/"
-        ></Route>
+        />
       </Routes>
     </>
   );

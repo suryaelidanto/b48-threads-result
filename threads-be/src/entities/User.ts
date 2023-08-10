@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Thread } from "./Thread";
 
 
-@Entity({name: "users"})
+@Entity({ name: "users" })
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -16,13 +16,13 @@ export class User {
     @Column()
     email: string;
 
-    @Column({select: false})
+    @Column({ select: false })
     password: string;
 
-    @Column()
+    @Column({ nullable: true })
     picture: string;
-    
-    @Column()
+
+    @Column({ nullable: true })
     description: string;
 
     @OneToMany(() => Thread, (thread) => thread.user, {

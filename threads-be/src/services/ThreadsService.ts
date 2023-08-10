@@ -23,7 +23,7 @@ class ThreadsService {
         responseBaru.push({
           ...element,
           likes_count: Math.floor(Math.random() * 100),
-          replies_cout: Math.floor(Math.random() * 100),
+          replies_count: Math.floor(Math.random() * 100),
         });
       });
 
@@ -52,6 +52,7 @@ class ThreadsService {
   async create(req: Request, res: Response) {
     try {
       const data = req.body;
+      const loginSession = res.locals.loginSession
 
       const { error } = createThreadSchema.validate(data);
 
@@ -64,7 +65,10 @@ class ThreadsService {
       // create object biar typenya sesuai
       const thread = this.threadRepository.create({
         content: data.content,
-        image: data.image
+        image: data.image,
+        user: {
+          id: loginSession.user.id  
+        }
       });
 
       // insertion ke database
