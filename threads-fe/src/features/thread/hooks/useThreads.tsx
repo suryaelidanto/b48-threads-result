@@ -2,7 +2,7 @@ import { IThreadCard, IThreadPost } from "@/interfaces/thread";
 import { API } from "@/libs/api";
 import { ChangeEvent, useEffect, useState } from "react";
 
-export function useFetchThreads() {
+export function useThreads() {
     const [threads, setThreads] = useState<IThreadCard[]>();
     const [form, setForm] = useState<IThreadPost>({
         content: "",

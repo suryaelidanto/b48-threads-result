@@ -1,1 +1,1 @@
-export * from './useFetchThreads'
+export * from './useThreads'

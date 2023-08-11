@@ -1,9 +1,9 @@
 import { ThreadCard } from "@/features/thread";
 import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { useFetchThreads } from "@/features/thread";
+import { useThreads } from "@/features/thread";
 
 export default function Home() {
-  const { handleChange, handlePost, threads } = useFetchThreads()
+  const { handleChange, handlePost, threads } = useThreads()
 
   return (
     <>
