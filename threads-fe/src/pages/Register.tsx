@@ -1,5 +1,6 @@
 import { FormRegister } from "@/features/auth";
 import { Box, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export default function Register() {
   return (
@@ -12,9 +13,11 @@ export default function Register() {
       <FormRegister />
       <Box display={"flex"} gap={2}>
         <Text>Already have account?</Text>
-        <Text color={"brand.green"} cursor={"pointer"}>
-          Login
-        </Text>
+        <Link to={"/auth/login"}>
+          <Text color={"brand.green"} cursor={"pointer"}>
+            Login
+          </Text>
+        </Link>
       </Box>
     </Box>
   );

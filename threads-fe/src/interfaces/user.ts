@@ -3,5 +3,17 @@ export interface IUser {
   full_name?: string;
   username?: string;
   email?: string;
-  picture?: string;
 }
+
+export interface IUserRegister {
+  full_name: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface IUserLogin {
+  email: string;
+  password: string;
+}
+

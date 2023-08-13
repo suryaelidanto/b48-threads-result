@@ -8,6 +8,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App.tsx";
+import { Provider } from 'react-redux'
+import { configureStore } from '@reduxjs/toolkit'
+import rootReducer from "./stores/rootReducer.ts";
 
 const colors: Colors = {
   brand: {
@@ -22,11 +25,17 @@ const config: ThemeConfig = {
 
 const theme = extendTheme({ colors, config });
 
+const store = configureStore({
+  reducer: rootReducer
+})
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <Router>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </Router>
     </ChakraProvider>
   </React.StrictMode>

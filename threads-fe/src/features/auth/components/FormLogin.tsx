@@ -1,6 +1,9 @@
 import { Box, Button, FormControl, Input, Text } from "@chakra-ui/react";
+import { useLogin } from "../hooks/useLogin";
 
 export function FormLogin() {
+  const { handleChange, handleLogin } = useLogin()
+
   return (
     <FormControl
       isRequired
@@ -15,12 +18,12 @@ export function FormLogin() {
       <Text fontSize={"2xl"} fontWeight={"bold"}>
         Login Connect
       </Text>
-      <Input placeholder="Email" name="email" />
-      <Input type="password" placeholder="Password" name="password" />
+      <Input placeholder="Email" name="email" onChange={handleChange} />
+      <Input type="password" placeholder="Password" name="password" onChange={handleChange} />
       <Box display="flex" justifyContent={"flex-end"}>
         <Text>Forgot password?</Text>
       </Box>
-      <Button backgroundColor={"green"} colorScheme="green" color={"white"}>
+      <Button backgroundColor={"green"} colorScheme="green" color={"white"} onClick={handleLogin}>
         Login
       </Button>
     </FormControl>

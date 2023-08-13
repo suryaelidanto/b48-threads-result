@@ -1,6 +1,9 @@
 import { Button, FormControl, Input, Text } from "@chakra-ui/react";
+import { useRegister } from "../hooks/useRegister";
 
 export function FormRegister() {
+  const { handleChange, handleRegister } = useRegister()
+
   return (
     <FormControl
       isRequired
@@ -15,11 +18,11 @@ export function FormRegister() {
       <Text fontSize={"2xl"} fontWeight={"bold"}>
         Create Account Connect
       </Text>
-      <Input placeholder="First name" name="full_name" />
-      <Input placeholder="Username" name="username" />
-      <Input placeholder="Email" name="email" />
-      <Input type="password" placeholder="Password" name="password" />
-      <Button backgroundColor={"green"} colorScheme="green" color={"white"}>Create</Button>
+      <Input placeholder="First name" name="full_name" onChange={handleChange} />
+      <Input placeholder="Username" name="username" onChange={handleChange} />
+      <Input placeholder="Email" name="email" onChange={handleChange} />
+      <Input type="password" placeholder="Password" name="password" onChange={handleChange} />
+      <Button backgroundColor={"green"} colorScheme="green" color={"white"} onClick={handleRegister}>Create</Button>
     </FormControl>
   );
 }
