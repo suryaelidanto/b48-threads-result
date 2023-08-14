@@ -2,7 +2,7 @@ import { IUser } from "./user";
 
 export interface IThreadPost {
   content: string;
-  image?: string;
+  image: Blob | MediaSource | string;
 }
 
 export interface IThreadCard {

@@ -1,9 +1,10 @@
-import { ThreadCard } from "@/features/thread";
+import { ThreadCard, useThreads } from "@/features/thread";
 import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { useThreads } from "@/features/thread";
+import { BiSolidImageAdd } from "react-icons/bi";
 
 export default function Home() {
-  const { handleChange, handlePost, threads } = useThreads()
+  const { handleChange, handlePost, threads, fileInputRef, handleButtonClick } =
+    useThreads();
 
   return (
     <>
@@ -18,29 +19,49 @@ export default function Home() {
           borderColor={"brand.grey"}
           padding={"20px"}
         >
-          <FormControl display={"flex"} flexDirection={"column"} gap={2}>
-            <FormLabel>Content</FormLabel>
-            <Input
-              placeholder="isikan apa yang kamu pikirkan..."
-              name="content"
-              onChange={handleChange}
-            />
-            <Input
-              placeholder="image..."
-              name="image"
-              onChange={handleChange}
-            />
-            <Box display={"flex"} justifyContent={"end"}>
-              <Button
-                backgroundColor={"brand.green"}
-                color={"white"}
-                colorScheme="green"
-                onClick={handlePost}
+          <form onSubmit={handlePost} encType="multipart/form-data">
+            <FormControl display={"flex"} flexDirection={"column"} gap={2}>
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
               >
-                Submit
-              </Button>
-            </Box>
-          </FormControl>
+                <Input
+                  placeholder="What is happening?!"
+                  name="content"
+                  onChange={handleChange}
+                />
+                <Button
+                  variant={"ghost"}
+                  color={"brand.green"}
+                  onClick={handleButtonClick}
+                >
+                  <BiSolidImageAdd
+                    style={{
+                      height: "50px",
+                      width: "50px",
+                    }}
+                  />
+                </Button>
+                <Input
+                  type="file"
+                  name="image"
+                  onChange={handleChange}
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                />
+                <Input
+                  type="submit"
+                  backgroundColor={"brand.green"}
+                  color={"white"}
+                  colorScheme="green"
+                  value={"Post"}
+                  fontSize={"12px"}
+                  width={"70px"}
+                />
+              </Box>
+            </FormControl>
+          </form>
           {threads?.map((item) => {
             return (
               <ThreadCard
