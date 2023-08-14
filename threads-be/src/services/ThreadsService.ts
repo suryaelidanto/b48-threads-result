@@ -6,6 +6,7 @@ import {
   createThreadSchema,
   updateThreadSchema,
 } from "../utils/validators/thread";
+import { v2 as cloudinary } from "cloudinary";
 
 class ThreadsService {
   private readonly threadRepository: Repository<Thread> =
@@ -51,8 +52,14 @@ class ThreadsService {
 
   async create(req: Request, res: Response) {
     try {
-      const data = req.body;
-      const loginSession = res.locals.loginSession
+      const image = res.locals.filename;
+
+      const data = {
+        content: req.body.content,
+        image,
+      };
+
+      const loginSession = res.locals.loginSession;
 
       const { error } = createThreadSchema.validate(data);
 
@@ -62,13 +69,25 @@ class ThreadsService {
         });
       }
 
+      cloudinary.config({
+        cloud_name: "dkg30pa5s",
+        api_key: "538241327826783",
+        api_secret: "Aba56Exrc2RYucZua1WHiaHiyR0",
+      });
+
+      const cloudinaryResponse = await cloudinary.uploader.upload(
+        "./uploads/" + image
+      );
+
+      console.log("cloudinary response", cloudinaryResponse);
+
       // create object biar typenya sesuai
       const thread = this.threadRepository.create({
         content: data.content,
-        image: data.image,
+        image: cloudinaryResponse.secure_url,
         user: {
-          id: loginSession.user.id  
-        }
+          id: loginSession.user.id,
+        },
       });
 
       // insertion ke database
