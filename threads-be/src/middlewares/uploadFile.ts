@@ -15,9 +15,9 @@ export const upload = (fieldName: string) => {
   const uploadFile = multer({ storage: storage });
 
   return (req: Request, res: Response, next: NextFunction) => {
-    uploadFile.single(fieldName)(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ error: "File upload failed." });
+    uploadFile.single(fieldName)(req, res, function (error: any) {
+      if (error) {
+        return res.status(400).json({ error });
       }
 
       res.locals.filename = req.file.filename;

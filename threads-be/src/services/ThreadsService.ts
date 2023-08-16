@@ -15,20 +15,23 @@ class ThreadsService {
   async find(req: Request, res: Response) {
     try {
       const threads = await this.threadRepository.find({
-        relations: ["user"],
+        relations: ["user", "likes", "replies"],
+        order: {
+          id: "DESC",
+        },
       });
 
-      let responseBaru = [];
+      let newResponse = [];
 
       threads.forEach((element) => {
-        responseBaru.push({
+        newResponse.push({
           ...element,
-          likes_count: Math.floor(Math.random() * 100),
-          replies_count: Math.floor(Math.random() * 100),
+          replies_count: element.replies.length,
+          likes_count: element.likes.length,
         });
       });
 
-      return res.status(200).json(responseBaru);
+      return res.status(200).json(newResponse);
     } catch (err) {
       return res.status(500).json("Something wrong in server!");
     }
@@ -41,10 +44,16 @@ class ThreadsService {
         where: {
           id: id,
         },
-        relations: ["user"],
+        relations: ["user", "replies", "likes"],
       });
 
-      return res.status(200).json(thread);
+      const newResponse = {
+        ...thread,
+        replies_count: thread.replies.length,
+        likes_count: thread.likes.length,
+      };
+
+      return res.status(200).json(newResponse);
     } catch (err) {
       return res.status(500).json("Something wrong in server!");
     }
