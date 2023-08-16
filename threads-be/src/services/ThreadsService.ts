@@ -1,24 +1,21 @@
-import { Request, Response } from "express";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Thread } from "../entities/Thread";
-import {
-  createThreadSchema,
-  updateThreadSchema,
-} from "../utils/validators/thread";
-import { v2 as cloudinary } from "cloudinary";
 
 class ThreadsService {
   private readonly threadRepository: Repository<Thread> =
     AppDataSource.getRepository(Thread);
 
-  async find(req: Request, res: Response) {
+  async find(reqQuery?: any): Promise<any> {
     try {
+      const limit = parseInt(reqQuery.limit as string);
+
       const threads = await this.threadRepository.find({
         relations: ["user", "likes", "replies"],
         order: {
           id: "DESC",
         },
+        take: limit,
       });
 
       let newResponse = [];
@@ -31,15 +28,14 @@ class ThreadsService {
         });
       });
 
-      return res.status(200).json(newResponse);
+      return newResponse;
     } catch (err) {
-      return res.status(500).json("Something wrong in server!");
+      throw new Error("Something wrong in server!");
     }
   }
 
-  async findOne(req: Request, res: Response) {
+  async findOne(id: number): Promise<any> {
     try {
-      const id = parseInt(req.params.id);
       const thread = await this.threadRepository.findOne({
         where: {
           id: id,
@@ -53,122 +49,68 @@ class ThreadsService {
         likes_count: thread.likes.length,
       };
 
-      return res.status(200).json(newResponse);
+      return newResponse;
     } catch (err) {
-      return res.status(500).json("Something wrong in server!");
+      throw new Error("Something wrong in server!");
     }
   }
 
-  async create(req: Request, res: Response) {
-    try {
-      const image = res.locals.filename;
+  // async create(reqBody: any, loginSession: any): Promise<any> {
+  //   try {
+  //     const { error } = createThreadSchema.validate(reqBody);
 
-      const data = {
-        content: req.body.content,
-        image,
-      };
+  //     if (error) {
+  //       throw new Error(error.details[0].message);
+  //     }
 
-      const loginSession = res.locals.loginSession;
+  //     cloudinary.config({
+  //       cloud_name: "dkg30pa5s",
+  //       api_key: "538241327826783",
+  //       api_secret: "Aba56Exrc2RYucZua1WHiaHiyR0",
+  //     });
 
-      const { error } = createThreadSchema.validate(data);
+  //     const cloudinaryResponse = await cloudinary.uploader.upload(
+  //       "./uploads/" + reqBody.image
+  //     );
 
-      if (error) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
+  //     const thread = this.threadRepository.create({
+  //       content: reqBody.content,
+  //       image: cloudinaryResponse.secure_url,
+  //       user: {
+  //         id: loginSession.user.id,
+  //       },
+  //     });
 
-      cloudinary.config({
-        cloud_name: "dkg30pa5s",
-        api_key: "538241327826783",
-        api_secret: "Aba56Exrc2RYucZua1WHiaHiyR0",
-      });
+  //     await this.threadRepository.save(thread);
 
-      const cloudinaryResponse = await cloudinary.uploader.upload(
-        "./uploads/" + image
-      );
+  //     return thread;
+  //   } catch (err) {
+  //     throw new Error("Something wrong in server!");
+  //   }
+  // }
 
-      console.log("cloudinary response", cloudinaryResponse);
+  // async delete(reqyBody : any) : Promise<any> {
+  //   try {
+  //     const id = parseInt(req.params.id);
+  //     const thread = await this.threadRepository.findOne({
+  //       where: {
+  //         id: id,
+  //       },
+  //     });
 
-      // create object biar typenya sesuai
-      const thread = this.threadRepository.create({
-        content: data.content,
-        image: cloudinaryResponse.secure_url,
-        user: {
-          id: loginSession.user.id,
-        },
-      });
+  //     if (!thread) {
+  //       return res.status(404).json("Thread ID not found!");
+  //     }
 
-      // insertion ke database
-      const createdThread = this.threadRepository.save(thread);
+  //     const deletedThread = this.threadRepository.delete({
+  //       id: id,
+  //     });
 
-      return res.status(200).json(thread);
-    } catch (err) {
-      return res.status(500).json("Something wrong in server!");
-    }
-  }
-
-  async update(req: Request, res: Response) {
-    try {
-      const id = parseInt(req.params.id);
-      const thread = await this.threadRepository.findOne({
-        where: {
-          id: id,
-        },
-      });
-
-      const data = req.body;
-      const { error } = updateThreadSchema.validate(data);
-
-      if (error) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
-
-      // bikin pengecekan hanya delete threadnya ketika thread dengan id yg sesuai param itu ada
-      if (!thread) {
-        return res.status(404).json("Thread ID not found!");
-      }
-
-      if (data.content != "") {
-        thread.content = data.content;
-      }
-
-      if (data.image != "") {
-        thread.image = data.image;
-      }
-
-      const createdThread = await this.threadRepository.save(thread);
-      return res.status(200).json(thread);
-    } catch (err) {
-      return res.status(500).json("Something wrong in server!");
-    }
-  }
-
-  async delete(req: Request, res: Response) {
-    try {
-      const id = parseInt(req.params.id);
-      const thread = await this.threadRepository.findOne({
-        where: {
-          id: id,
-        },
-      });
-
-      // bikin pengecekan hanya delete threadnya ketika thread dengan id yg sesuai param itu ada
-      if (!thread) {
-        return res.status(404).json("Thread ID not found!");
-      }
-
-      const deletedThread = this.threadRepository.delete({
-        id: id,
-      });
-
-      return res.status(200).json(thread);
-    } catch (err) {
-      return res.status(500).json("Something wrong in server!");
-    }
-  }
+  //     return res.status(200).json(thread);
+  //   } catch (err) {
+  //     return res.status(500).json("Something wrong in server!");
+  //   }
+  // }
 }
 
 export default new ThreadsService();

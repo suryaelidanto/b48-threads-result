@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Like } from "../entities/Like";
@@ -7,55 +6,45 @@ class LikesService {
   private readonly likeRepository: Repository<Like> =
     AppDataSource.getRepository(Like);
 
-  async create(req: Request, res: Response) {
+  async create(reqBody: any, loginSession: any): Promise<any> {
     try {
-      const loginSession = res.locals.loginSession;
-
       const checkLike = await this.likeRepository.count({
         where: {
           user: {
             id: loginSession.user.id,
           },
           thread: {
-            id: req.body.thread_id,
+            id: reqBody.thread_id,
           },
         },
       });
 
       if (checkLike > 0) {
-        const deletedLike = this.likeRepository.delete({
-          user: {
-            id: loginSession.user.id,
-          },
-          thread: {
-            id: req.body.thread_id,
-          },
-        });
-        return res.status(200).json(deletedLike);
+        throw new Error("You already like this thread!");
       }
 
       const like = this.likeRepository.create({
         thread: {
-          id: req.body.thread_id,
+          id: reqBody.thread_id,
         },
         user: {
           id: loginSession.user.id,
         },
       });
 
-      const createdLike = this.likeRepository.save(like);
+      await this.likeRepository.save(like);
 
-      return res.status(200).json(like);
+      return {
+        message: "You liked this thread!",
+        like: like,
+      };
     } catch (err) {
-      return res.status(500).json("Something wrong in server!");
+      throw new Error("Something wrong in server!");
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(threadId: number, loginSession: any): Promise<any> {
     try {
-      const loginSession = res.locals.loginSession;
-
-      const threadId = parseInt(req.params.thread_id);
       const like = await this.likeRepository.findOne({
         where: {
           thread: {
@@ -68,16 +57,19 @@ class LikesService {
       });
 
       if (!like) {
-        return res.status(404).json("Like ID not found!");
+        throw new Error("You didn't like this thread!");
       }
 
-      const deletedLike = this.likeRepository.delete({
+      await this.likeRepository.delete({
         id: like.id,
       });
 
-      return res.status(200).json(like);
+      return {
+        message: "You unliked this thread!",
+        like: like,
+      };
     } catch (err) {
-      return res.status(500).json("Something wrong in server!");
+      throw new Error("Something wrong in server!");
     }
   }
 }
