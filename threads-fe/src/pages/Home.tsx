@@ -1,11 +1,9 @@
 import { ThreadCard, useThreads } from "@/features/thread";
-import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Button, FormControl, Input } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const navigate = useNavigate();
-  const { handleChange, handlePost, threads, fileInputRef, handleButtonClick } =
+  const { handleChange, handlePost, fileInputRef, handleButtonClick, threads } =
     useThreads();
 
   return (

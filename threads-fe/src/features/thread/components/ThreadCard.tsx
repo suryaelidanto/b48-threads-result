@@ -1,16 +1,60 @@
 import { IThreadCard } from "@/interfaces/thread";
 import { API } from "@/libs/api";
+import { GET_THREADS, SET_LIKE } from "@/stores/rootReducer";
+import { RootState } from "@/stores/types/rootState";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export function ThreadCard(props: IThreadCard) {
   const [showImage, setShowImage] = useState<boolean>(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const threads = useSelector((state: RootState) => state.thread);
 
-  async function handlePostLike(threadId: number | undefined) {
-    const response = await API.post("/like", { thread_id: threadId });
-    console.log("berhasil menambahkan like", response.data);
+  function loopMyThings(thread_id: number | undefined, threads: IThreadCard[]) {
+    return new Promise((resolve, reject) => {
+      const tempThreads: IThreadCard[] = [];
+
+      threads.forEach((thread) => {
+        const likes_count = thread.is_liked
+          ? (thread.likes_count ? thread.likes_count : 0) - 1
+          : (thread.likes_count ? thread.likes_count : 0) + 1;
+
+        if (thread.id === thread_id) {
+          tempThreads.push({
+            ...thread,
+            is_liked: !thread.is_liked,
+            likes_count: likes_count,
+          });
+        } else {
+          tempThreads.push(thread);
+        }
+
+        resolve(tempThreads);
+      });
+    });
+  }
+
+  async function handlePostLike(
+    thread_id: number | undefined,
+    is_liked: boolean | undefined
+  ) {
+    if (!is_liked) {
+      const newThreads = await loopMyThings(thread_id, threads);
+      console.log("ini new threads post", newThreads);
+      dispatch(GET_THREADS(newThreads));
+      const response = await API.post("/like", { thread_id: thread_id });
+      console.log("berhasil menambahkan like", response.data);
+    } else {
+      const newThreads = await loopMyThings(thread_id, threads);
+      console.log("ini new threads delete", newThreads);
+      dispatch(GET_THREADS(newThreads));
+      const response = await API.delete(`/like/${thread_id}`);
+      console.log("berhasil delete like", response.data);
+    }
   }
 
   return (
@@ -58,7 +102,7 @@ export function ThreadCard(props: IThreadCard) {
           <Box display={"flex"} gap={2} marginTop={"10px"}>
             <Button
               backgroundColor={props.is_liked ? "red" : "brand.grey"}
-              onClick={() => handlePostLike(props.id)}
+              onClick={() => handlePostLike(props.id, props.is_liked)}
             >
               {props.likes_count}
             </Button>

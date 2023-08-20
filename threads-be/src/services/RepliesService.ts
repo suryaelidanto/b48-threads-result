@@ -8,7 +8,7 @@ class RepliesService {
 
   async find(reqQuery: any): Promise<any> {
     try {
-      const threadId = parseInt(reqQuery.thread_id as string);
+      const threadId = +reqQuery.thread_id ?? undefined;
 
       const replies = await this.replyRepository.find({
         relations: ["user"],
@@ -24,7 +24,7 @@ class RepliesService {
 
       return replies;
     } catch (err) {
-      throw new Error("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 
@@ -44,7 +44,7 @@ class RepliesService {
 
       return;
     } catch (err) {
-      throw new Error("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 }

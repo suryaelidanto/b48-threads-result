@@ -1,18 +1,22 @@
-import { IThreadCard, IThreadPost } from "@/interfaces/thread";
+import { IThreadPost } from "@/interfaces/thread";
 import { API } from "@/libs/api";
-import { ChangeEvent, useEffect, useState, useRef, FormEvent } from "react";
+import { GET_THREADS } from "@/stores/rootReducer";
+import { RootState } from "@/stores/types/rootState";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export function useThreads() {
-  const [threads, setThreads] = useState<IThreadCard[]>();
+  const dispatch = useDispatch();
+  const threads = useSelector((state: RootState) => state.thread);
   const [form, setForm] = useState<IThreadPost>({
     content: "",
     image: "",
   });
 
   async function getThreads() {
-    const response = await API.get("/threads");
-    console.log("ini threads", response.data);
-    setThreads(response.data);
+    const response = await API.get(`/threads?limit=5`);
+    dispatch(GET_THREADS(response.data));
   }
 
   async function handlePost(event: FormEvent<HTMLFormElement>) {
@@ -59,5 +63,5 @@ export function useThreads() {
     fileInputRef.current?.click();
   }
 
-  return { handleChange, handlePost, threads, fileInputRef, handleButtonClick };
+  return { handleChange, handlePost, fileInputRef, handleButtonClick, threads };
 }

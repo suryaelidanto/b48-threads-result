@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Repository, Tree } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Like } from "../entities/Like";
 
@@ -8,7 +8,7 @@ class LikesService {
 
   async create(reqBody: any, loginSession: any): Promise<any> {
     try {
-      const checkLike = await this.likeRepository.count({
+      const isLikeExist = await this.likeRepository.count({
         where: {
           user: {
             id: loginSession.user.id,
@@ -19,7 +19,7 @@ class LikesService {
         },
       });
 
-      if (checkLike > 0) {
+      if (isLikeExist > 0) {
         throw new Error("You already like this thread!");
       }
 
@@ -39,7 +39,7 @@ class LikesService {
         like: like,
       };
     } catch (err) {
-      throw new Error("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 
@@ -69,7 +69,7 @@ class LikesService {
         like: like,
       };
     } catch (err) {
-      throw new Error("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 }

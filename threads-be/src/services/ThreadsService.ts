@@ -6,31 +6,32 @@ class ThreadsService {
   private readonly threadRepository: Repository<Thread> =
     AppDataSource.getRepository(Thread);
 
-  async find(reqQuery?: any): Promise<any> {
+  async find(reqQuery?: any, loginSession?: any): Promise<any> {
     try {
-      const limit = parseInt(reqQuery.limit as string);
+      const limit = +reqQuery.limit ?? 0;
 
       const threads = await this.threadRepository.find({
-        relations: ["user", "likes", "replies"],
+        relations: ["user", "likes.user", "replies"],
         order: {
           id: "DESC",
         },
         take: limit,
       });
 
-      let newResponse = [];
-
-      threads.forEach((element) => {
-        newResponse.push({
-          ...element,
-          replies_count: element.replies.length,
-          likes_count: element.likes.length,
-        });
-      });
-
-      return newResponse;
+      return threads.map((element) => ({
+        id: element.id,
+        content: element.content,
+        image: element.image,
+        posted_at: element.posted_at,
+        user: element.user,
+        replice: element.replies.length,
+        likes_count: element.likes.length,
+        is_liked: element.likes.some(
+          (like: any) => like.user.id === loginSession.user.id
+        ),
+      }));
     } catch (err) {
-      throw new Error("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 
@@ -43,15 +44,13 @@ class ThreadsService {
         relations: ["user", "replies", "likes"],
       });
 
-      const newResponse = {
+      return {
         ...thread,
         replies_count: thread.replies.length,
         likes_count: thread.likes.length,
       };
-
-      return newResponse;
     } catch (err) {
-      throw new Error("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 
@@ -85,7 +84,7 @@ class ThreadsService {
 
   //     return thread;
   //   } catch (err) {
-  //     throw new Error("Something wrong in server!");
+  //     throw new Error("Something went wrong on the server!");
   //   }
   // }
 
@@ -108,7 +107,7 @@ class ThreadsService {
 
   //     return res.status(200).json(thread);
   //   } catch (err) {
-  //     return res.status(500).json("Something wrong in server!");
+  //     return res.status(500).json("Something went wrong on the server!");
   //   }
   // }
 }

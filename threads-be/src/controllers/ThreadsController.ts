@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
+import { format } from "path";
 import ThreadsService from "../services/ThreadsService";
 
 class ThreadsController {
   async find(req: Request, res: Response) {
     try {
-      const response = await ThreadsService.find(req.query);
+      const loginSession = res.locals.loginSession;
+
+      const response = await ThreadsService.find(req.query, loginSession);
       return res.status(200).json(response);
-    } catch (err) {
+    } catch (error) {
       return res
         .status(500)
         .json({ error: "Something went wrong on the server!" });
@@ -19,7 +22,7 @@ class ThreadsController {
 
       const response = await ThreadsService.findOne(id);
       return res.status(200).json(response);
-    } catch (err) {
+    } catch (error) {
       return res
         .status(500)
         .json({ error: "Something went wrong on the server!" });
@@ -38,10 +41,10 @@ class ThreadsController {
 
   //       const response = await ThreadsService.create(reqBody, loginSession);
   //       return res.status(200).json(response);
-  //     } catch (err) {
+  //     } catch (error) {
   //       return res
   //         .status(500)
-  //         .json({ error: "Something went wrong on the server!" });
+  //         .json({ error});
   //     }
   //   }
 
@@ -49,10 +52,10 @@ class ThreadsController {
   //     try {
   //       const response = await ThreadsService.update(req, res);
   //       return res.status(200).json(response);
-  //     } catch (err) {
+  //     } catch (error) {
   //       return res
   //         .status(500)
-  //         .json({ error: "Something went wrong on the server!" });
+  //         .json({ error});
   //     }
   //   }
 
@@ -60,10 +63,10 @@ class ThreadsController {
   //     try {
   //       const response = await ThreadsService.delete(req, res);
   //       return res.status(200).json(response);
-  //     } catch (err) {
+  //     } catch (error) {
   //       return res
   //         .status(500)
-  //         .json({ error: "Something went wrong on the server!" });
+  //         .json({ error});
   //     }
   //   }
 }

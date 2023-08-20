@@ -17,13 +17,13 @@ class AuthService {
         throw new Error(error.details[0].message);
       }
 
-      const checkEmail = await this.authRepository.count({
+      const isEmailRegistered = await this.authRepository.count({
         where: {
           email: reqBody.email,
         },
       });
 
-      if (checkEmail > 0) {
+      if (isEmailRegistered > 0) {
         throw new Error("Email is already registered!");
       }
 
@@ -39,7 +39,7 @@ class AuthService {
       await this.authRepository.save(user);
 
       return {
-        message: "Register success!",
+        message: "Registration successful!",
         user: user,
       };
     } catch (err) {
@@ -55,38 +55,36 @@ class AuthService {
         throw new Error(error.details[0].message);
       }
 
-      const checkEmail = await this.authRepository.findOne({
+      const user = await this.authRepository.findOne({
         where: {
           email: reqBody.email,
         },
         select: ["id", "full_name", "email", "username", "password"],
       });
 
-      if (!checkEmail) {
+      if (!user) {
         throw new Error("Email / password is wrong!");
       }
 
       const isPasswordValid = await bcrypt.compare(
         reqBody.password,
-        checkEmail.password
+        user.password
       );
 
       if (!isPasswordValid) {
         throw new Error("Email / password is wrong!");
       }
 
-      const user = this.authRepository.create({
-        id: checkEmail.id,
-        full_name: checkEmail.full_name,
-        username: checkEmail.username,
-        email: checkEmail.email,
-      });
-
       const token = jwt.sign({ user }, "dumbwaysterbaik", { expiresIn: "1h" });
 
       return {
-        message: "Login success!",
-        user: user,
+        message: "Login successful!",
+        user: {
+          id: user.id,
+          full_name: user.full_name,
+          username: user.username,
+          email: user.email,
+        },
         token: token,
       };
     } catch (err) {
