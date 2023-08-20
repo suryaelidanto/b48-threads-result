@@ -3,8 +3,7 @@ import { API } from "@/libs/api";
 import { GET_THREADS } from "@/stores/rootReducer";
 import { RootState } from "@/stores/types/rootState";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 export function useThreads() {
   const dispatch = useDispatch();
@@ -22,9 +21,6 @@ export function useThreads() {
   async function handlePost(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // console.log(form);
-    console.log("test image", form.image);
-
     const formData = new FormData();
     formData.append("content", form.content);
     formData.append("image", form.image as File);
@@ -40,16 +36,13 @@ export function useThreads() {
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value, files } = event.target;
-    console.log("testing", name, value, files);
 
     if (files) {
-      console.log("masuk file");
       setForm({
         ...form,
         [name]: files[0],
       });
     } else {
-      console.log("masuk biasa");
       setForm({
         ...form,
         [name]: value,
