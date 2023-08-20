@@ -3,6 +3,8 @@ export interface IUser {
   full_name?: string;
   username?: string;
   email?: string;
+  picture?: string;
+  description?: string;
 }
 
 export interface IUserRegister {
@@ -16,4 +18,3 @@ export interface IUserLogin {
   email: string;
   password: string;
 }
-

@@ -1,146 +1,115 @@
-import { Request, Response } from "express";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Thread } from "../entities/Thread";
-import {
-  createThreadSchema,
-  updateThreadSchema,
-} from "../utils/validators/thread";
 
 class ThreadsService {
   private readonly threadRepository: Repository<Thread> =
     AppDataSource.getRepository(Thread);
 
-  async find(req: Request, res: Response) {
+  async find(reqQuery?: any, loginSession?: any): Promise<any> {
     try {
+      const limit = +reqQuery.limit ?? 0;
+
       const threads = await this.threadRepository.find({
-        relations: ["user"],
+        relations: ["user", "likes.user", "replies"],
+        order: {
+          id: "DESC",
+        },
+        take: limit,
       });
 
-      let responseBaru = [];
-
-      threads.forEach((element) => {
-        responseBaru.push({
-          ...element,
-          likes_count: Math.floor(Math.random() * 100),
-          replies_count: Math.floor(Math.random() * 100),
-        });
-      });
-
-      return res.status(200).json(responseBaru);
+      return threads.map((element) => ({
+        id: element.id,
+        content: element.content,
+        image: element.image,
+        posted_at: element.posted_at,
+        user: element.user,
+        replice: element.replies.length,
+        likes_count: element.likes.length,
+        is_liked: element.likes.some(
+          (like: any) => like.user.id === loginSession.user.id
+        ),
+      }));
     } catch (err) {
-      return res.status(500).json("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 
-  async findOne(req: Request, res: Response) {
+  async findOne(id: number): Promise<any> {
     try {
-      const id = parseInt(req.params.id);
       const thread = await this.threadRepository.findOne({
         where: {
           id: id,
         },
-        relations: ["user"],
+        relations: ["user", "replies", "likes"],
       });
 
-      return res.status(200).json(thread);
+      return {
+        ...thread,
+        replies_count: thread.replies.length,
+        likes_count: thread.likes.length,
+      };
     } catch (err) {
-      return res.status(500).json("Something wrong in server!");
+      throw new Error("Something went wrong on the server!");
     }
   }
 
-  async create(req: Request, res: Response) {
-    try {
-      const data = req.body;
-      const loginSession = res.locals.loginSession
+  // async create(reqBody: any, loginSession: any): Promise<any> {
+  //   try {
+  //     const { error } = createThreadSchema.validate(reqBody);
 
-      const { error } = createThreadSchema.validate(data);
+  //     if (error) {
+  //       throw new Error(error.details[0].message);
+  //     }
 
-      if (error) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
+  //     cloudinary.config({
+  //       cloud_name: "dkg30pa5s",
+  //       api_key: "538241327826783",
+  //       api_secret: "Aba56Exrc2RYucZua1WHiaHiyR0",
+  //     });
 
-      // create object biar typenya sesuai
-      const thread = this.threadRepository.create({
-        content: data.content,
-        image: data.image,
-        user: {
-          id: loginSession.user.id  
-        }
-      });
+  //     const cloudinaryResponse = await cloudinary.uploader.upload(
+  //       "./uploads/" + reqBody.image
+  //     );
 
-      // insertion ke database
-      const createdThread = this.threadRepository.save(thread);
+  //     const thread = this.threadRepository.create({
+  //       content: reqBody.content,
+  //       image: cloudinaryResponse.secure_url,
+  //       user: {
+  //         id: loginSession.user.id,
+  //       },
+  //     });
 
-      return res.status(200).json(thread);
-    } catch (err) {
-      return res.status(500).json("Something wrong in server!");
-    }
-  }
+  //     await this.threadRepository.save(thread);
 
-  async update(req: Request, res: Response) {
-    try {
-      const id = parseInt(req.params.id);
-      const thread = await this.threadRepository.findOne({
-        where: {
-          id: id,
-        },
-      });
+  //     return thread;
+  //   } catch (err) {
+  //     throw new Error("Something went wrong on the server!");
+  //   }
+  // }
 
-      const data = req.body;
-      const { error } = updateThreadSchema.validate(data);
+  // async delete(reqyBody : any) : Promise<any> {
+  //   try {
+  //     const id = parseInt(req.params.id);
+  //     const thread = await this.threadRepository.findOne({
+  //       where: {
+  //         id: id,
+  //       },
+  //     });
 
-      if (error) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
+  //     if (!thread) {
+  //       return res.status(404).json("Thread ID not found!");
+  //     }
 
-      // bikin pengecekan hanya delete threadnya ketika thread dengan id yg sesuai param itu ada
-      if (!thread) {
-        return res.status(404).json("Thread ID not found!");
-      }
+  //     const deletedThread = this.threadRepository.delete({
+  //       id: id,
+  //     });
 
-      if (data.content != "") {
-        thread.content = data.content;
-      }
-
-      if (data.image != "") {
-        thread.image = data.image;
-      }
-
-      const createdThread = await this.threadRepository.save(thread);
-      return res.status(200).json(thread);
-    } catch (err) {
-      return res.status(500).json("Something wrong in server!");
-    }
-  }
-
-  async delete(req: Request, res: Response) {
-    try {
-      const id = parseInt(req.params.id);
-      const thread = await this.threadRepository.findOne({
-        where: {
-          id: id,
-        },
-      });
-
-      // bikin pengecekan hanya delete threadnya ketika thread dengan id yg sesuai param itu ada
-      if (!thread) {
-        return res.status(404).json("Thread ID not found!");
-      }
-
-      const deletedThread = this.threadRepository.delete({
-        id: id,
-      });
-
-      return res.status(200).json(thread);
-    } catch (err) {
-      return res.status(500).json("Something wrong in server!");
-    }
-  }
+  //     return res.status(200).json(thread);
+  //   } catch (err) {
+  //     return res.status(500).json("Something went wrong on the server!");
+  //   }
+  // }
 }
 
 export default new ThreadsService();
