@@ -8,11 +8,14 @@ import ThreadsQueue from "../queues/ThreadsQueue";
 // import { EventEmitter } from "events";
 import RepliesController from "../controllers/RepliesController";
 import LikesController from "../controllers/LikesController";
+import UserController from "../controllers/UserController";
 
 const router = express.Router();
 
+router.get("/profile", authenticate, UserController.findOne);
+
 router.get("/threads", authenticate, ThreadsController.find);
-router.get("/thread/:id", authenticate, ThreadsController.findOne);
+router.get("/threads", authenticate, ThreadsController.find);
 router.post("/thread", authenticate, upload("image"), ThreadsQueue.create);
 
 router.get("/replies", authenticate, RepliesController.find);
