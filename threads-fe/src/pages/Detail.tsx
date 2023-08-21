@@ -25,6 +25,7 @@ export default function Detail() {
             image={thread?.image}
             likes_count={thread?.likes_count}
             replies_count={thread?.replies_count}
+            is_liked={thread?.is_liked}
           />
           <Box marginTop={"20px"}>
             <form onSubmit={handlePost} encType="multipart/form-data">

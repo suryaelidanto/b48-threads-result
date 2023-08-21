@@ -19,8 +19,11 @@ import {
 } from "react-icons/ai";
 
 import { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Main({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
+
   return (
     <>
       <Box
@@ -39,6 +42,7 @@ export default function Main({ children }: { children: ReactNode }) {
             display={"flex"}
             justifyContent={"flex-start"}
             variant={"ghost"}
+            onClick={() => navigate("/")}
           >
             <AiFillHome />
             <Text marginLeft={"10px"}>Home</Text>
