@@ -12,10 +12,8 @@ import LikesController from "../controllers/LikesController";
 const router = express.Router();
 
 router.get("/threads", authenticate, ThreadsController.find);
-router.get("/thread/:id", ThreadsController.findOne);
+router.get("/thread/:id", authenticate, ThreadsController.findOne);
 router.post("/thread", authenticate, upload("image"), ThreadsQueue.create);
-// router.patch("/thread/:id", ThreadsController.update);
-// router.delete("/thread/:id", ThreadsController.delete);
 
 router.get("/replies", authenticate, RepliesController.find);
 router.post("/reply", authenticate, RepliesController.create);

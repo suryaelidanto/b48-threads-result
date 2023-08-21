@@ -8,7 +8,7 @@ class RepliesService {
 
   async find(reqQuery: any): Promise<any> {
     try {
-      const threadId = +reqQuery.thread_id ?? undefined;
+      const threadId = parseInt(reqQuery.thread_id ?? 0);
 
       const replies = await this.replyRepository.find({
         relations: ["user"],
