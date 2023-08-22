@@ -30,7 +30,8 @@ class FollowsService {
         });
 
         return follows.map((follow) => ({
-          id: follow.followed.id,
+          id: follow.id,
+          user_id: follow.followed.id,
           username: follow.followed.username,
           full_name: follow.followed.full_name,
           email: follow.followed.email,
@@ -63,7 +64,8 @@ class FollowsService {
             });
 
             return {
-              id: follow.follower.id,
+              id: follow.id,
+              user_id: follow.follower.id,
               username: follow.follower.username,
               full_name: follow.follower.full_name,
               email: follow.follower.email,

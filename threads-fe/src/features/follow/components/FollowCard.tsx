@@ -1,17 +1,26 @@
 import { IFollow } from "@/interfaces/follow";
 import { API } from "@/libs/api";
+import { SET_FOLLOW } from "@/stores/rootReducer";
 import { Box, Button, Image, Text } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
 
 export function FollowCard(props: IFollow) {
-  async function handleFollow(followedUserId: number, isFollowed: boolean) {
+  const dispatch = useDispatch();
+  async function handleFollow(
+    id: number,
+    followedUserId: number,
+    isFollowed: boolean
+  ) {
     try {
       if (!isFollowed) {
         const response = await API.post(`/follow`, {
           followed_user_id: followedUserId,
         });
+        dispatch(SET_FOLLOW({ id: id, isFollowed: isFollowed }));
         console.log("berhasil follow!", response.data);
       } else {
         const response = await API.delete(`/follow/${followedUserId}`);
+        dispatch(SET_FOLLOW({ id: id, isFollowed: isFollowed }));
         console.log("berhasil unfollow!", response.data);
       }
     } catch (err) {
@@ -41,7 +50,11 @@ export function FollowCard(props: IFollow) {
             <Text>{props.description}</Text>
           </Box>
           <Box flex={1} display="flex" justifyContent={"flex-end"}>
-            <Button onClick={() => handleFollow(props.id, props.is_followed)}>
+            <Button
+              onClick={() =>
+                handleFollow(props.id, props.user_id, props.is_followed)
+              }
+            >
               {props.is_followed ? "Unfollow" : "Follow"}
             </Button>
           </Box>

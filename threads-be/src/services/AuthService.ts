@@ -75,7 +75,7 @@ class AuthService {
         throw new Error("Email / password is wrong!");
       }
 
-      const token = jwt.sign({ user }, "dumbwaysterbaik", { expiresIn: "1h" });
+      const token = jwt.sign({ user }, "dumbwaysterbaik", { expiresIn: "1d" });
 
       return {
         message: "Login successful!",

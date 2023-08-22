@@ -17,40 +17,51 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: initialAuthState,
   reducers: {
-    AUTH_LOGIN: (_, action) => {
-      const payload = action.payload;
-      setAuthToken(payload.token);
-      localStorage.setItem("token", payload.token);
+    AUTH_LOGIN: (state, action) => {
+      const {
+        id,
+        email,
+        full_name,
+        username,
+        description,
+        picture,
+        followers_count,
+        followings_count,
+        token,
+      } = action.payload.user;
 
-      const user: IUser = {
-        id: payload.user.id,
-        email: payload.user.email,
-        full_name: payload.user.full_name,
-        username: payload.user.username,
-        description: payload.user.description,
-        picture: payload.user.picture,
-        followers_count: payload.user.followers_count,
-        followings_count: payload.user.followings_count,
-      };
+      setAuthToken(token);
+      localStorage.setItem("token", token);
 
-      return user;
+      state.id = id;
+      state.email = email;
+      state.full_name = full_name;
+      state.username = username;
+      state.description = description;
+      state.picture = picture;
+      state.followers_count = followers_count;
+      state.followings_count = followings_count;
     },
-    AUTH_CHECK: (_, action) => {
-      const payload = action.payload;
+    AUTH_CHECK: (state, action) => {
+      const {
+        id,
+        email,
+        full_name,
+        username,
+        description,
+        picture,
+        followers_count,
+        followings_count,
+      } = action.payload.user;
 
-      const user: IUser = {
-        id: payload.user.id,
-        email: payload.user.email,
-        full_name: payload.user.full_name,
-        username: payload.user.username,
-        description: payload.user.description,
-        picture: payload.user.picture,
-        followers_count: payload.user.followers_count,
-        followings_count: payload.user.followings_count,
-      };
-
-
-      return user;
+      state.id = id;
+      state.email = email;
+      state.full_name = full_name;
+      state.username = username;
+      state.description = description;
+      state.picture = picture;
+      state.followers_count = followers_count;
+      state.followings_count = followings_count;
     },
     AUTH_ERROR: () => {
       localStorage.removeItem("token");

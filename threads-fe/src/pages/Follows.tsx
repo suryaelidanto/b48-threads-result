@@ -1,21 +1,24 @@
 import { FollowCard } from "@/features/follow";
-import { IFollow } from "@/interfaces/follow";
 import { API } from "@/libs/api";
+import { GET_FOLLOWS, SET_FOLLOW_STATE } from "@/stores/rootReducer";
+import { RootState } from "@/stores/types/rootState";
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Follows() {
-  const [followState, setFollowState] = useState("followers");
-  const [followsData, setFollowsData] = useState<IFollow[]>([]);
+  const dispatch = useDispatch();
+  const followState = useSelector(
+    (state: RootState) => state.follow.followState
+  );
+  const follows = useSelector((state: RootState) => state.follow.follows);
 
   async function getFollowData() {
     const response = await API.get(`/follows?type=${followState}`);
-    console.log("follows:  ", response.data);
-    setFollowsData(response.data);
+    dispatch(GET_FOLLOWS(response.data));
   }
 
   useEffect(() => {
-    console.log("masuk sini dong");
     getFollowData();
   }, [followState]);
 
@@ -24,15 +27,20 @@ export default function Follows() {
       <Box display={"flex"} justifyContent={"center"}>
         <Tabs isFitted variant="enclosed" width="600px" marginTop={"20px"}>
           <TabList mb="1em">
-            <Tab onClick={() => setFollowState("followers")}>Followers</Tab>
-            <Tab onClick={() => setFollowState("followings")}>Followings</Tab>
+            <Tab onClick={() => dispatch(SET_FOLLOW_STATE("followers"))}>
+              Followers
+            </Tab>
+            <Tab onClick={() => dispatch(SET_FOLLOW_STATE("followings"))}>
+              Followings
+            </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              {followsData.map((follow, index) => (
+              {follows.map((follow, index) => (
                 <FollowCard
                   key={index}
                   id={follow.id}
+                  user_id={follow.user_id}
                   full_name={follow.full_name}
                   username={follow.username}
                   email={follow.email}
@@ -43,10 +51,11 @@ export default function Follows() {
               ))}
             </TabPanel>
             <TabPanel>
-              {followsData.map((follow, index) => (
+              {follows.map((follow, index) => (
                 <FollowCard
                   key={index}
                   id={follow.id}
+                  user_id={follow.user_id}
                   full_name={follow.full_name}
                   username={follow.username}
                   email={follow.email}

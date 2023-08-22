@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 export function useThreads() {
   const dispatch = useDispatch();
-  const threads = useSelector((state: RootState) => state.thread);
+  const threads = useSelector((state: RootState) => state.thread.threads);
   const [form, setForm] = useState<IThreadPost>({
     content: "",
     image: "",
