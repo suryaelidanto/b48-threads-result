@@ -8,10 +8,8 @@ class LikesController {
 
       const response = await LikesService.create(req.body, loginSession);
       return res.status(200).json(response);
-    } catch (err) {
-      return res
-        .status(500)
-        .json({ error: "Something went wrong on the server!" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
   }
 
@@ -22,8 +20,8 @@ class LikesController {
 
       const response = await LikesService.delete(threadId, loginSession);
       return res.status(200).json(response);
-    } catch (err) {
-      return res.status(500).json("Something went wrong on the server!");
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
   }
 }

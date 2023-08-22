@@ -2,11 +2,9 @@ import { IThreadCard } from "@/interfaces/thread";
 import { API } from "@/libs/api";
 import { GET_THREADS } from "@/stores/rootReducer";
 import { RootState } from "@/stores/types/rootState";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export function useThreadCard() {
-  const [showImage, setShowImage] = useState<boolean>(true);
   const dispatch = useDispatch();
   const threads = useSelector((state: RootState) => state.thread);
 
@@ -65,8 +63,6 @@ export function useThreadCard() {
   }
 
   return {
-    showImage,
-    setShowImage,
     handlePostLike,
   };
 }

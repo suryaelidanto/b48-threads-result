@@ -30,8 +30,8 @@ class ThreadsService {
           (like: any) => like.user.id === loginSession.user.id
         ),
       }));
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
@@ -56,8 +56,8 @@ class ThreadsService {
           (like: any) => like.user.id === loginSession.user.id
         ),
       };
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 }

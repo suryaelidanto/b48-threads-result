@@ -87,8 +87,8 @@ class AuthService {
         },
         token: token,
       };
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
@@ -98,14 +98,24 @@ class AuthService {
         where: {
           id: loginSession.user.id,
         },
+        relations: ["followers", "followings"],
       });
 
       return {
         message: "Token is valid!",
-        user: user,
+        user: {
+          id: user.id,
+          full_name: user.full_name,
+          username: user.username,
+          email: user.email,
+          picture: user.picture,
+          description: user.description,
+          followers_count: user.followers.length,
+          followings_count: user.followers.length,
+        },
       };
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 }

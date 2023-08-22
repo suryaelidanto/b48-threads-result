@@ -6,10 +6,10 @@ class RepliesController {
     try {
       const response = await RepliesService.find(req.query);
       return res.status(200).json(response);
-    } catch (err) {
+    } catch (error) {
       return res
         .status(500)
-        .json({ error: "Something went wrong on the server!" });
+        .json({ error: error.message });
     }
   }
 
@@ -19,10 +19,10 @@ class RepliesController {
 
       const response = await RepliesService.create(req.body, loginSession);
       return res.status(200).json(response);
-    } catch (err) {
+    } catch (error) {
       return res
         .status(500)
-        .json({ error: "Something went wrong on the server!" });
+        .json({ error: error.message });
     }
   }
 }

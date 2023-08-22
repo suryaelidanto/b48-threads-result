@@ -7,9 +7,7 @@ class AuthController {
       const response = await AuthService.register(req.body);
       return res.status(200).json(response);
     } catch (error) {
-      return res
-        .status(500)
-        .json({ error: "Something went wrong on the server!" });
+      return res.status(500).json({ error: error.message });
     }
   }
 
@@ -18,9 +16,7 @@ class AuthController {
       const response = await AuthService.login(req.body);
       return res.status(200).json(response);
     } catch (error) {
-      return res
-        .status(500)
-        .json({ error: "Something went wrong on the server!" });
+      return res.status(500).json({ error: error.message });
     }
   }
 
@@ -31,9 +27,7 @@ class AuthController {
 
       return res.status(200).json(response);
     } catch (error) {
-      return res
-        .status(500)
-        .json({ error: "Something went wrong on the server!" });
+      return res.status(500).json({ error: error.message });
     }
   }
 }

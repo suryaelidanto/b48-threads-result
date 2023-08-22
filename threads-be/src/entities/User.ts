@@ -39,13 +39,13 @@ export class User {
   })
   likes: Like[];
 
-  @OneToMany(() => Follow, (follow) => follow.follower, {
+  @OneToMany(() => Follow, (follow) => follow.followed, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   followers: Follow[];
 
-  @OneToMany(() => Follow, (follow) => follow.followed, {
+  @OneToMany(() => Follow, (follow) => follow.follower, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })

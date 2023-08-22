@@ -20,9 +20,12 @@ import {
 
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/types/rootState";
 
 export default function Main({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
+  const auth = useSelector((state: RootState) => state.auth);
 
   return (
     <>
@@ -51,6 +54,7 @@ export default function Main({ children }: { children: ReactNode }) {
             display={"flex"}
             justifyContent={"flex-start"}
             variant={"ghost"}
+            onClick={() => navigate("/search")}
           >
             <AiOutlineSearch />
             <Text marginLeft={"10px"}>Search</Text>
@@ -59,6 +63,7 @@ export default function Main({ children }: { children: ReactNode }) {
             display={"flex"}
             justifyContent={"flex-start"}
             variant={"ghost"}
+            onClick={() => navigate("/follows")}
           >
             <AiOutlineHeart />
             <Text marginLeft={"10px"}>Follows</Text>
@@ -67,6 +72,7 @@ export default function Main({ children }: { children: ReactNode }) {
             display={"flex"}
             justifyContent={"flex-start"}
             variant={"ghost"}
+            onClick={() => navigate("/profile")}
           >
             <AiOutlineUser />
             <Text marginLeft={"10px"}>Profile</Text>
@@ -108,7 +114,7 @@ export default function Main({ children }: { children: ReactNode }) {
                 width={"100%"}
               />
               <Avatar
-                src="https://static1.personality-database.com/profile_images/4b05b8222e1f47d1b721ebe0800c9169.png"
+                src={auth.picture ? auth.picture : "/user-placeholder.png"}
                 position={"absolute"}
                 border={"2px solid black"}
                 top={70}
@@ -118,16 +124,16 @@ export default function Main({ children }: { children: ReactNode }) {
               />
             </Box>
             <CardBody>
-              <Text fontWeight={"bold"}>Surya Elidanto</Text>
-              <Text>@suryaelidanto</Text>
-              <Text>Life's too short, be badass</Text>
+              <Text fontWeight={"bold"}>{auth.full_name}</Text>
+              <Text>@{auth.username}</Text>
+              <Text>{auth.description}</Text>
               <Box display={"flex"} gap={3}>
                 <Box display={"flex"} gap={2}>
-                  <Text fontWeight={"bold"}>291</Text>
+                  <Text fontWeight={"bold"}>{auth.followings_count ?? 0}</Text>
                   <Text>Following</Text>
                 </Box>
                 <Box display={"flex"} gap={2}>
-                  <Text fontWeight={"bold"}>23</Text>
+                  <Text fontWeight={"bold"}>{auth.followers_count ?? 0}</Text>
                   <Text>Followers</Text>
                 </Box>
               </Box>

@@ -7,6 +7,10 @@ const initialAuthState: IUser = {
   email: "",
   full_name: "",
   username: "",
+  description: "",
+  picture: "",
+  followers_count: 0,
+  followings_count: 0,
 };
 
 export const authSlice = createSlice({
@@ -20,22 +24,31 @@ export const authSlice = createSlice({
 
       const user: IUser = {
         id: payload.user.id,
+        email: payload.user.email,
         full_name: payload.user.full_name,
         username: payload.user.username,
-        email: payload.user.email,
+        description: payload.user.description,
+        picture: payload.user.picture,
+        followers_count: payload.user.followers_count,
+        followings_count: payload.user.followings_count,
       };
 
       return user;
     },
     AUTH_CHECK: (_, action) => {
       const payload = action.payload;
-      
+
       const user: IUser = {
-        id: payload.id,
-        full_name: payload.full_name,
-        username: payload.username,
-        email: payload.email,
+        id: payload.user.id,
+        email: payload.user.email,
+        full_name: payload.user.full_name,
+        username: payload.user.username,
+        description: payload.user.description,
+        picture: payload.user.picture,
+        followers_count: payload.user.followers_count,
+        followings_count: payload.user.followings_count,
       };
+
 
       return user;
     },

@@ -6,17 +6,23 @@ import { upload } from "../middlewares/uploadFile";
 import ThreadsQueue from "../queues/ThreadsQueue";
 // import ThreadWorker from "../workers/ThreadWorker";
 // import { EventEmitter } from "events";
-import RepliesController from "../controllers/RepliesController";
 import LikesController from "../controllers/LikesController";
-import UserController from "../controllers/UserController";
+import RepliesController from "../controllers/RepliesController";
+import FollowsController from "../controllers/FollowsController";
 
 const router = express.Router();
 
-router.get("/profile", authenticate, UserController.findOne);
-
 router.get("/threads", authenticate, ThreadsController.find);
-router.get("/threads", authenticate, ThreadsController.find);
+router.get("/thread/:id", authenticate, ThreadsController.findOne);
 router.post("/thread", authenticate, upload("image"), ThreadsQueue.create);
+
+router.get("/follows", authenticate, FollowsController.find);
+router.post("/follow", authenticate, FollowsController.create);
+router.delete(
+  "/follow/:followed_user_id",
+  authenticate,
+  FollowsController.delete
+);
 
 router.get("/replies", authenticate, RepliesController.find);
 router.post("/reply", authenticate, RepliesController.create);

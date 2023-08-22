@@ -5,7 +5,7 @@ import { useThreadCard } from "../hooks/useThreadCard";
 
 export function ThreadCard(props: IThreadCard) {
   const navigate = useNavigate();
-  const { handlePostLike, showImage, setShowImage } = useThreadCard();
+  const { handlePostLike } = useThreadCard();
 
   return (
     <>
@@ -16,9 +16,7 @@ export function ThreadCard(props: IThreadCard) {
         padding={"20px 0px"}
       >
         <Image
-          src={
-            props.user?.picture ? props.user?.picture : "/user-placeholder.png"
-          }
+          src={props.user?.picture ?? "/user-placeholder.png"}
           width={"50px"}
           height={"50px"}
           objectFit={"cover"}
@@ -39,13 +37,7 @@ export function ThreadCard(props: IThreadCard) {
                 <Text color="brand.grey">{props.posted_at}</Text>
               </Box>
               <Text>{props.content}</Text>
-              {showImage && (
-                <Image
-                  src={props.image}
-                  onError={() => setShowImage(false)}
-                  alt="content_image"
-                />
-              )}
+              <Image src={props.image} alt="" />
             </Box>
           </Box>
 

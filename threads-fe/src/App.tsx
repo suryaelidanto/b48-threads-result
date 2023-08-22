@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AUTH_CHECK, AUTH_ERROR } from "./stores/rootReducer";
 import { RootState } from "./stores/types/rootState";
 import Detail from "./pages/Detail";
+import Follows from "./pages/Follows";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -41,7 +42,7 @@ export default function App() {
       setAuthToken(localStorage.token);
       const response = await API.get("/auth/check");
       console.log("authCheck : ", response);
-      dispatch(AUTH_CHECK(response.data.user));
+      dispatch(AUTH_CHECK(response.data));
       setIsLoading(false);
     } catch (err) {
       dispatch(AUTH_ERROR());
@@ -95,6 +96,14 @@ export default function App() {
                 </Main>
               }
               path="/detail/:id"
+            />
+            <Route
+              element={
+                <Main>
+                  <Follows />
+                </Main>
+              }
+              path="/follows"
             />
           </Route>
           <Route path="/" element={<IsNotLogin />}>

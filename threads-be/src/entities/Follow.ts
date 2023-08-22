@@ -6,13 +6,13 @@ export class Follow {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.followers, {
+  @ManyToOne(() => User, (user) => user.followings, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   follower: User;
 
-  @ManyToOne(() => User, (user) => user.followings, {
+  @ManyToOne(() => User, (user) => user.followers, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })

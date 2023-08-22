@@ -23,8 +23,8 @@ class RepliesService {
       });
 
       return replies;
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
@@ -43,8 +43,8 @@ class RepliesService {
       await this.replyRepository.save(reply);
 
       return;
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 }

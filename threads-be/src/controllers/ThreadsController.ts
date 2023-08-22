@@ -11,7 +11,7 @@ class ThreadsController {
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Something went wrong on the server!" });
+        .json({ error: error.message });
     }
   }
 
@@ -25,7 +25,7 @@ class ThreadsController {
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Something went wrong on the server!" });
+        .json({ error: error.message });
     }
   }
 }

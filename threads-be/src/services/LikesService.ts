@@ -38,8 +38,8 @@ class LikesService {
         message: "You liked this thread!",
         like: like,
       };
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
@@ -68,8 +68,8 @@ class LikesService {
         message: "You unliked this thread!",
         like: like,
       };
-    } catch (err) {
-      throw new Error("Something went wrong on the server!");
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 }
