@@ -10,21 +10,25 @@ import {
 import {
   AiFillFacebook,
   AiFillGithub,
+  AiFillHeart,
   AiFillHome,
   AiFillInstagram,
   AiFillLinkedin,
   AiOutlineHeart,
+  AiOutlineHome,
   AiOutlineSearch,
-  AiOutlineUser,
 } from "react-icons/ai";
+import { BiSolidSearch } from "react-icons/bi";
+import { PiUser, PiUserFill } from "react-icons/pi";
 
-import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { RootState } from "@/stores/types/rootState";
+import { ReactNode } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Main({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const auth = useSelector((state: RootState) => state.auth);
 
   return (
@@ -47,7 +51,7 @@ export default function Main({ children }: { children: ReactNode }) {
             variant={"ghost"}
             onClick={() => navigate("/")}
           >
-            <AiFillHome />
+            {location.pathname === "/" ? <AiFillHome /> : <AiOutlineHome />}
             <Text marginLeft={"10px"}>Home</Text>
           </Button>
           <Button
@@ -56,7 +60,11 @@ export default function Main({ children }: { children: ReactNode }) {
             variant={"ghost"}
             onClick={() => navigate("/search")}
           >
-            <AiOutlineSearch />
+            {location.pathname === "/search" ? (
+              <BiSolidSearch />
+            ) : (
+              <AiOutlineSearch />
+            )}
             <Text marginLeft={"10px"}>Search</Text>
           </Button>
           <Button
@@ -65,7 +73,11 @@ export default function Main({ children }: { children: ReactNode }) {
             variant={"ghost"}
             onClick={() => navigate("/follows")}
           >
-            <AiOutlineHeart />
+            {location.pathname === "/follows" ? (
+              <AiFillHeart />
+            ) : (
+              <AiOutlineHeart />
+            )}
             <Text marginLeft={"10px"}>Follows</Text>
           </Button>
           <Button
@@ -74,7 +86,7 @@ export default function Main({ children }: { children: ReactNode }) {
             variant={"ghost"}
             onClick={() => navigate("/profile")}
           >
-            <AiOutlineUser />
+            {location.pathname === "/profile" ? <PiUserFill /> : <PiUser />}
             <Text marginLeft={"10px"}>Profile</Text>
           </Button>
           <Button
