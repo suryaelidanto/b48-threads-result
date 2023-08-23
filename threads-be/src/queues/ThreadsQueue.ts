@@ -42,7 +42,7 @@ class ThreadQueue {
         data: payload,
       });
     } catch (err) {
-      console.log("terjadi error ketika queueing", err);
+      console.log("Queue error!", err);
       res.status(500).json({
         error: "Something wrong in server!",
       });

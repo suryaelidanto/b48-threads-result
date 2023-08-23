@@ -18,11 +18,11 @@ export function useThreadDetail() {
     try {
       event.preventDefault();
 
-      const response = await API.post("/reply", form);
-      console.log("berhasil menambahkan reply", response.data);
+      await API.post("/reply", form);
+      // console.log("berhasil menambahkan reply", response.data);
       getReplies();
     } catch (err) {
-      console.log("gagal menambahkan reply", err);
+      console.log("Failed to add reply!", err);
     }
   }
 
@@ -38,9 +38,10 @@ export function useThreadDetail() {
     try {
       const response = await API.get(`/thread/${id}`);
       setThread(response.data);
-      console.log("ini data thread detail", response.data);
+      // console.log("ini data thread detail", response.data);
     } catch (err) {
-      console.log("gagal mengambil data thread by id : ", err);
+      console.log("Failed to get thread : ", err);
+      // console.log("gagal mengambil data thread by id : ", err);
     }
   }
 
@@ -48,9 +49,9 @@ export function useThreadDetail() {
     try {
       const response = await API.get(`/replies?thread_id=${id}`);
       setReplies(response.data);
-      console.log("ini reply untuk thread id", response.data);
+      // console.log("ini reply untuk thread id", response.data);
     } catch (err) {
-      console.log("gagal mengambil replies data thread by id : ", err);
+      console.log("Failed to get replies: ", err);
     }
   }
 

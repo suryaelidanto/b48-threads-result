@@ -12,14 +12,14 @@ export function useThreadCard() {
       if (!isLiked) {
         const response = await API.post("/like", { thread_id: id });
         dispatch(SET_THREAD_LIKE({ id: id, isLiked: isLiked }));
-        console.log("berhasil menambahkan like", response.data);
+        // console.log("berhasil menambahkan like", response.data);
       } else {
         const response = await API.delete(`/like/${id}`);
         dispatch(SET_THREAD_LIKE({ id: id, isLiked: isLiked }));
-        console.log("berhasil delete like", response.data);
+        // console.log("berhasil delete like", response.data);
       }
     } catch (err) {
-      console.log("gagal update like", err);
+      console.log("Failed updating like!", err);
     }
   }
 

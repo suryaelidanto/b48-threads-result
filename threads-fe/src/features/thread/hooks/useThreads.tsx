@@ -26,7 +26,7 @@ export function useThreads() {
     formData.append("image", form.image as File);
 
     const response = await API.post("/thread", formData);
-    console.log("berhasil menambahkan thread", response);
+    console.log("Thread added successfully!", response);
     getThreads();
   }
 

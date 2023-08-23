@@ -27,8 +27,9 @@ export const authSlice = createSlice({
         picture,
         followers_count,
         followings_count,
-        token,
       } = action.payload.user;
+
+      const { token } = action.payload;
 
       setAuthToken(token);
       localStorage.setItem("token", token);

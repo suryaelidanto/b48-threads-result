@@ -13,15 +13,15 @@ export function FollowCard(props: IFollow) {
   ) {
     try {
       if (!isFollowed) {
-        const response = await API.post(`/follow`, {
+        await API.post(`/follow`, {
           followed_user_id: followedUserId,
         });
         dispatch(SET_FOLLOW({ id: id, isFollowed: isFollowed }));
-        console.log("berhasil follow!", response.data);
+        // console.log("berhasil follow!", response.data);
       } else {
-        const response = await API.delete(`/follow/${followedUserId}`);
+        await API.delete(`/follow/${followedUserId}`);
         dispatch(SET_FOLLOW({ id: id, isFollowed: isFollowed }));
-        console.log("berhasil unfollow!", response.data);
+        // console.log("berhasil unfollow!", response.data);
       }
     } catch (err) {
       console.log(err);

@@ -17,36 +17,36 @@ export default function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const sse = new EventSource("http://localhost:5000/api/v1/notifications");
+  // useEffect(() => {
+  //   const sse = new EventSource("http://localhost:5000/api/v1/notifications");
 
-    function getRealtimeData(data: any) {
-      console.log("Ini datanya cuy:", data);
-    }
+  //   function getRealtimeData(data: any) {
+  //     console.log("Ini datanya cuy:", data);
+  //   }
 
-    sse.onopen = (e) => console.log("berhasil connect ! : ", e);
+  //   sse.onopen = (e) => console.log("berhasil connect ! : ", e);
 
-    sse.onmessage = (e) => getRealtimeData(JSON.parse(e.data));
-    sse.onerror = () => {
-      console.log("Error SSE bro!");
-      sse.close();
-    };
+  //   sse.onmessage = (e) => getRealtimeData(JSON.parse(e.data));
+  //   sse.onerror = () => {
+  //     console.log("Error SSE bro!");
+  //     sse.close();
+  //   };
 
-    return () => {
-      sse.close();
-    };
-  }, []);
+  //   return () => {
+  //     sse.close();
+  //   };
+  // }, []);
 
   async function authCheck() {
     try {
       setAuthToken(localStorage.token);
       const response = await API.get("/auth/check");
-      console.log("authCheck : ", response);
+      // console.log("authCheck : ", response);
       dispatch(AUTH_CHECK(response.data));
       setIsLoading(false);
     } catch (err) {
       dispatch(AUTH_ERROR());
-      console.log("auth check error", err);
+      // console.log("auth check error", err);
       setIsLoading(false);
       navigate("/auth/login");
     }
