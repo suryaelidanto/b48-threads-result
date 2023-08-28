@@ -16,6 +16,7 @@
    },
    "dependencies": {
       "amqplib": "^0.10.3",
+      "axios": "^1.5.0",
       "bcrypt": "^5.1.0",
       "cloudinary": "^1.40.0",
       "cors": "^2.8.5",
@@ -29,7 +30,7 @@
    },
    "scripts": {
       "start": "nodemon --exec ts-node src/index.ts",
-      "worker" : "nodemon --exec ts-node src/workers",
+      "worker": "nodemon --exec ts-node src/workers",
       "typeorm": "typeorm-ts-node-commonjs",
       "migration:generate": "npx typeorm-ts-node-commonjs migration:generate src/migrations/SuryaGanteng -d src/data-source.ts",
       "migration:run": "npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts"

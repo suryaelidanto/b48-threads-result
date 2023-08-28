@@ -3,10 +3,10 @@ import { v2 as cloudinary } from "cloudinary";
 import "dotenv/config";
 import { AppDataSource } from "../data-source";
 import { Thread } from "../entities/Thread";
-// import { EventEmitter } from "stream";
+import { EventEmitter } from "stream";
+import { request } from "http";
 
-class ThreadWorker {
-  // public emitter = new EventEmitter();
+class ThreadWorker extends EventEmitter {
   async create(queueName: string, connection: amqp.Connection) {
     try {
       const channel = await connection.createChannel();
@@ -33,7 +33,19 @@ class ThreadWorker {
 
             await AppDataSource.getRepository(Thread).save(thread);
 
-            // this.emitter.emit("message");
+            // request to server
+            const req = request({
+              hostname: "localhost",
+              port: 5000,
+              path: "/api/v1/new-thread",
+              method: "GET",
+            });
+
+            req.on("error", (error) => {
+              console.error("Error sending request:", error);
+            });
+
+            req.end();
 
             console.log("Thread is created!");
             channel.ack(message);

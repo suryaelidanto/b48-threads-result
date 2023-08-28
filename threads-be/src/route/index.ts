@@ -1,14 +1,12 @@
 import * as express from "express";
 import AuthController from "../controllers/AuthController";
+import FollowsController from "../controllers/FollowsController";
+import LikesController from "../controllers/LikesController";
+import RepliesController from "../controllers/RepliesController";
 import ThreadsController from "../controllers/ThreadsController";
 import { authenticate } from "../middlewares/auth";
 import { upload } from "../middlewares/uploadFile";
 import ThreadsQueue from "../queues/ThreadsQueue";
-// import ThreadWorker from "../workers/ThreadWorker";
-// import { EventEmitter } from "events";
-import LikesController from "../controllers/LikesController";
-import RepliesController from "../controllers/RepliesController";
-import FollowsController from "../controllers/FollowsController";
 
 const router = express.Router();
 
@@ -34,19 +32,24 @@ router.post("/auth/register", AuthController.register);
 router.post("/auth/login", AuthController.login);
 router.get("/auth/check", authenticate, AuthController.check);
 
-// router.get("/notifications", (req: express.Request, res: express.Response) => {
-//   res.setHeader("Content-Type", "text/event-stream");
-//   res.setHeader("Cache-Control", "no-cache");
-//   res.setHeader("Connection", "keep-alive");
+router.get("/notifications", (req: express.Request, res: express.Response) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
 
-//   res.write("event: message\n");
-//   setInterval(() => {
-//     res.write(`data: ${JSON.stringify({ message: "apa gitu" })}\n`);
-//   }, 1000);
-// });
+  res.write("event: message\n");
+  function sendNotification(data: any) {
+    res.write("data:" + data + "\n\n");
+  }
 
-// ThreadWorker.emitter.on("message", () => {
-//   console.log("Event message received!");
-// });
+  router.get("/new-thread", (req, res) => {
+    const data = JSON.stringify({ data: "new thread!" });
+    sendNotification(data);
+
+    res.sendStatus(200);
+  });
+
+  // res.end();
+});
 
 export default router;

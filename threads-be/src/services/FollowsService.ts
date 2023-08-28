@@ -26,7 +26,7 @@ class FollowsService {
               id: loginSession.user.id,
             },
           },
-          relations: ["followed", "follower"],
+          relations: ["followed"],
         });
 
         return follows.map((follow) => ({
@@ -47,7 +47,7 @@ class FollowsService {
               id: loginSession.user.id,
             },
           },
-          relations: ["followed", "follower"],
+          relations: ["follower"],
         });
 
         return await Promise.all(
