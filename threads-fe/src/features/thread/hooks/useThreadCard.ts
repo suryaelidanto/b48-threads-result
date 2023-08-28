@@ -10,14 +10,13 @@ export function useThreadCard() {
   async function handlePostLike(id: number, isLiked: boolean) {
     try {
       if (!isLiked) {
-        const response = await API.post("/like", { thread_id: id });
-        dispatch(SET_THREAD_LIKE({ id: id, isLiked: isLiked }));
+        await API.post("/like", { thread_id: id });
         // console.log("berhasil menambahkan like", response.data);
       } else {
-        const response = await API.delete(`/like/${id}`);
-        dispatch(SET_THREAD_LIKE({ id: id, isLiked: isLiked }));
+        await API.delete(`/like/${id}`);
         // console.log("berhasil delete like", response.data);
       }
+      dispatch(SET_THREAD_LIKE({ id: id, isLiked: isLiked }));
     } catch (err) {
       console.log("Failed updating like!", err);
     }
